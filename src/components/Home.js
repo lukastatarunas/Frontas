@@ -167,27 +167,57 @@ class Home extends Component {
         })
     }
 
+    addWorkerEverySecond = () => {
+        axios.post(`http://localhost:5000/workers`, {
+            name: this.state.workerInputData.name,
+            surname: this.state.workerInputData.surname,
+            monday: this.state.workDaysData.monday,
+            tuesday: this.state.workDaysData.tuesday,
+            wednesday: this.state.workDaysData.wednesday,
+            thursday: this.state.workDaysData.thursday,
+            friday: this.state.workDaysData.friday,
+            saturday: this.state.workDaysData.saturday,
+            sunday: this.state.workDaysData.sunday,
+        })
+        .then(res => {
+            this.setState({
+                modal: !this.state.modal,
+                workDaysData: {
+                    monday: ``,
+                    tuesday: ``,
+                    wednesday: ``,
+                    thursday: ``,
+                    friday: ``,
+                    saturday: ``,
+                    sunday: ``,
+                }
+            })
+            setTimeout(() => {
+                this.getWorkers()
+            }, 1000)
+        })
+    }
+
     showWorkerData = e => {
         let workerId = e.target.outerHTML.split(/"/)[1]
-        this.state.workers.map((worker, i) => {
-            if (worker._id === workerId) {
-                this.setState({
-                    modal: !this.state.modal,
-                    workerInputData: {
-                        name: worker.name,
-                        surname: worker.surname
-                    },
-                    workDaysData: {
-                        monday: worker.monday,
-                        tuesday: worker.tuesday,
-                        wednesday: worker.wednesday,
-                        thursday: worker.thursday,
-                        friday: worker.friday,
-                        saturday: worker.saturday,
-                        sunday: worker.sunday,
-                    }
-                })
-            }
+        let filteredWorkers = this.state.workers.filter(worker => worker._id === workerId)
+        filteredWorkers.forEach(worker => {
+            this.setState({
+                modal: !this.state.modal,
+                workerInputData: {
+                    name: worker.name,
+                    surname: worker.surname
+                },
+                workDaysData: {
+                    monday: worker.monday,
+                    tuesday: worker.tuesday,
+                    wednesday: worker.wednesday,
+                    thursday: worker.thursday,
+                    friday: worker.friday,
+                    saturday: worker.saturday,
+                    sunday: worker.sunday,
+                }
+            })
         })
     }
 
